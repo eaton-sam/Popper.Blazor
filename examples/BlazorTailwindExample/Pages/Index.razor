@@ -1,0 +1,35 @@
+﻿@layout MainLayout
+@page "/"
+
+<h1 class="text-4xl font-bold mb-4 mt-[111px]">Hello, world!</h1>
+
+Welcome to your new app.
+
+<div class="mb-16">
+    @* <button class="bg-blue-800 text-white rounded px-4 py-2"@ref="_buttonRef" @onclick="() => _isOpen = !_isOpen">Testing Popper</button> *@
+    @* *@
+    @* <Popper AnchorRef="_buttonRef" @bind-Open="_isOpen" Placement="top" AutoClose> *@
+    @*     <Content> *@
+    @*         <div class="border border-gray-300 bg-white p-4 rounded"> *@
+    @*             Here's some popover content *@
+    @*         </div> *@
+    @*     </Content> *@
+    @* </Popper> *@
+    
+    <Popper Open Placement="bottom">
+        <Anchor>
+            <button class="bg-cyan-800 text-white rounded px-4 py-2" @onclick="() => _isOpen = !_isOpen">Testing Popper</button>
+        </Anchor>
+        <Content>
+            <div class="border border-gray-300 bg-white p-4 rounded">
+                Here's some popover content
+            </div>
+        </Content>
+    </Popper>
+</div>
+
+@code {
+    private ElementReference _buttonRef;
+    private bool _isOpen;
+}
+

@@ -1,0 +1,67 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+@if (Anchor is not null)
+{
+    <span style="display: inline-block" @ref="_anchorRef">
+        @Anchor
+    </span>
+}
+
+@if (Open)
+{
+    <PopperPortal>
+        <span @ref="_contentRef">
+            @Content
+        </span>
+    </PopperPortal>
+}
+
+
+@code {
+    [Parameter] public RenderFragment? Anchor { get; set; }
+    [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
+    [Parameter] public bool AutoClose { get; set; }
+
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+    private bool _wasOpen;
+
+    [Parameter] public string? Placement { get; set; }
+    private string? _previousPlacement;
+
+    private ElementReference? _anchorRef;
+    private ElementReference? _contentRef;
+
+    private IJSObjectReference? _module;
+    private DotNetObjectReference<Popper>? _objRef;
+
+    protected override void OnInitialized()
+    {
+        _objRef = DotNetObjectReference.Create(this);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Popper.Blazor/index.js");
+        }
+
+        if (Open && !_wasOpen)
+        {
+            await _module!.InvokeVoidAsync("createPopper", _anchorRef, _contentRef, new { placement = Placement }, AutoClose, _objRef);
+        }
+
+        _wasOpen = Open;
+        _previousPlacement = Placement;
+    }
+
+    [JSInvokable]
+    public async Task HidePopper()
+    {
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+}
