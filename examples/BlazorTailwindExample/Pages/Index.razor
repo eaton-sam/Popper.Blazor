@@ -6,17 +6,7 @@
 Welcome to your new app.
 
 <div class="mb-16">
-    @* <button class="bg-blue-800 text-white rounded px-4 py-2"@ref="_buttonRef" @onclick="() => _isOpen = !_isOpen">Testing Popper</button> *@
-    @* *@
-    @* <Popper AnchorRef="_buttonRef" @bind-Open="_isOpen" Placement="top" AutoClose> *@
-    @*     <Content> *@
-    @*         <div class="border border-gray-300 bg-white p-4 rounded"> *@
-    @*             Here's some popover content *@
-    @*         </div> *@
-    @*     </Content> *@
-    @* </Popper> *@
-    
-    <Popper Open Placement="bottom">
+    <Popper @bind-Open="_isOpen" Placement="Placement.Bottom" Offset="(5, 5)" AutoClose>
         <Anchor>
             <button class="bg-cyan-800 text-white rounded px-4 py-2" @onclick="() => _isOpen = !_isOpen">Testing Popper</button>
         </Anchor>
@@ -28,8 +18,20 @@ Welcome to your new app.
     </Popper>
 </div>
 
+<div class="mb-24">
+    <Popper Open Placement="Placement.RightEnd" Offset="(10, 10)">
+        <Anchor>
+            <div class="p-8 border rounded border-gray-300">Testing</div>
+        </Anchor>
+        <Content>
+            <div class="border border-gray-700 bg-gray-900 text-white p-4 rounded">
+                Here's some popover content
+            </div>
+        </Content>
+    </Popper>
+</div>
+
 @code {
-    private ElementReference _buttonRef;
     private bool _isOpen;
 }
 

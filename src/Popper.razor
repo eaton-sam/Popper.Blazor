@@ -22,46 +22,56 @@
     [Parameter] public RenderFragment? Anchor { get; set; }
     [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
     [Parameter] public bool AutoClose { get; set; }
+    [Parameter] public (int x, int y)? Offset { get; set; }
+    [Parameter] public Modifier[] Modifiers { get; set; } = { };
 
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
     private bool _wasOpen;
 
-    [Parameter] public string? Placement { get; set; }
-    private string? _previousPlacement;
+    [Parameter] public Placement Placement { get; set; }
+    private Placement? _previousPlacement;
 
     private ElementReference? _anchorRef;
     private ElementReference? _contentRef;
 
-    private IJSObjectReference? _module;
-    private DotNetObjectReference<Popper>? _objRef;
+    private PopperInterop _popperInterop;
 
     protected override void OnInitialized()
     {
-        _objRef = DotNetObjectReference.Create(this);
+        _popperInterop = new PopperInterop(JSRuntime);
+        _popperInterop.OnClosed += HidePopper;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
-        {
-            _module = await JSRuntime.InvokeAsync<IJSObjectReference>("import", "./_content/Popper.Blazor/index.js");
-        }
-
+        //hacky bullshit
+        await Task.Yield();
+        
         if (Open && !_wasOpen)
         {
-            await _module!.InvokeVoidAsync("createPopper", _anchorRef, _contentRef, new { placement = Placement }, AutoClose, _objRef);
+            await _popperInterop.Create(_anchorRef, _contentRef!.Value, Placement, GetModifiers(), AutoClose);
         }
 
         _wasOpen = Open;
         _previousPlacement = Placement;
     }
 
-    [JSInvokable]
-    public async Task HidePopper()
+    private Modifier[] GetModifiers()
+    {
+        var modifiers = new List<Modifier>(Modifiers);
+        if (Offset.HasValue)
+        {
+            modifiers.Add(new OffsetModifier(Offset.Value.x, Offset.Value.y));
+        }
+        return modifiers.ToArray();
+    }
+
+    private async Task HidePopper()
     {
         Open = false;
         await OpenChanged.InvokeAsync(Open);
         StateHasChanged();
     }
+
 }

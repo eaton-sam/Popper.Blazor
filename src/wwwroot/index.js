@@ -1,7 +1,9 @@
 ﻿import './popper.min.js'
 
-export function createPopper(element, content, settings, autoClose, dotnetRef) {
-    Popper.createPopper(element, content, settings);
+let popperMap = new Map();
+
+export function createPopper(anchor, content, settings, autoClose, dotnetRef) {
+    popperMap.set(content, Popper.createPopper(anchor, content, settings));
 
     let isChildOfContent = (element) => {
         if (element === undefined || element === null) {
