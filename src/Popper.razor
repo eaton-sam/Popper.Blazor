@@ -1,5 +1,6 @@
 ﻿@using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
 
 @if (Anchor is not null)
 {
@@ -17,7 +18,6 @@
     </PopperPortal>
 }
 
-
 @code {
     [Parameter] public RenderFragment? Anchor { get; set; }
     [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
@@ -27,13 +27,16 @@
 
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
-    private bool _wasOpen;
 
     [Parameter] public Placement Placement { get; set; }
-    private Placement? _previousPlacement;
+    
+    private Guid _instanceId = Guid.NewGuid();
 
-    private ElementReference? _anchorRef;
-    private ElementReference? _contentRef;
+    private Placement? _previousPlacement;
+    private bool? _wasOpen;
+    
+    private ElementReference _anchorRef;
+    private ElementReference _contentRef;
 
     private PopperInterop _popperInterop;
 
@@ -45,12 +48,26 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //hacky bullshit
         await Task.Yield();
-        
-        if (Open && !_wasOpen)
+
+        if (Open && (!_wasOpen.HasValue || !_wasOpen.Value))
         {
-            await _popperInterop.Create(_anchorRef, _contentRef!.Value, Placement, GetModifiers(), AutoClose);
+            //Wasn't open, now is
+            Console.WriteLine("Wasn't open, now is");
+            await _popperInterop.Create(_instanceId, _anchorRef, _contentRef, Placement, GetModifiers(), AutoClose);
+        }
+        if (!Open && _wasOpen.HasValue && _wasOpen.Value)
+        {
+            //Was open, now isn't
+            Console.WriteLine("Was open, now isn't");
+            await _popperInterop.Destroy(_instanceId);
+        }
+        
+        //Properties have changed, need to update popper instance
+        //Has to be open, has to have been rendered at least once before
+        if (Open && _previousPlacement.HasValue && Placement != _previousPlacement.Value)
+        {
+            await _popperInterop.Update(_instanceId, _contentRef, Placement, GetModifiers(), Open && AutoClose);
         }
 
         _wasOpen = Open;
@@ -72,6 +89,12 @@
         Open = false;
         await OpenChanged.InvokeAsync(Open);
         StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await _popperInterop.Destroy(_instanceId);
+        await _popperInterop.DisposeAsync();
     }
 
 }

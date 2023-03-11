@@ -18,8 +18,14 @@ Welcome to your new app.
     </Popper>
 </div>
 
+<select @bind="_placement">
+    <option value="@Placement.Right">@Placement.Right.ToString()</option>
+    <option value="@Placement.Top">@Placement.Top.ToString()</option>
+    <option value="@Placement.Bottom">@Placement.Bottom.ToString()</option>
+</select>
+
 <div class="mb-24">
-    <Popper Open Placement="Placement.RightEnd" Offset="(10, 10)">
+    <Popper Open Placement="@_placement" Offset="(10, 10)">
         <Anchor>
             <div class="p-8 border rounded border-gray-300">Testing</div>
         </Anchor>
@@ -33,5 +39,7 @@ Welcome to your new app.
 
 @code {
     private bool _isOpen;
+
+    private Placement _placement = Placement.Right;
 }
 

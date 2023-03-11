@@ -18,18 +18,30 @@ public class PopperInterop : IAsyncDisposable
         _objRef = DotNetObjectReference.Create(this);
     }
 
-    public async Task Create(ElementReference? anchorRef, ElementReference contentRef, Placement placement, Modifier[]? modifiers, bool autoClose)
+    public async Task Create(Guid id, ElementReference anchorRef, ElementReference contentRef, Placement placement, Modifier[] modifiers, bool autoClose)
     {
         var module = await _moduleTask.Value;
-        await module.InvokeVoidAsync("createPopper", anchorRef, contentRef, CreateOptions(placement, modifiers), autoClose, _objRef);
+        await module.InvokeVoidAsync("createPopper", id, anchorRef, contentRef, CreateOptions(placement, modifiers), autoClose, _objRef);
     }
 
-    private object CreateOptions(Placement placement, Modifier[]? modifiers)
+    public async Task Update(Guid id, ElementReference contentRef, Placement placement, Modifier[] modifiers, bool autoClose)
+    {
+        var module = await _moduleTask.Value;
+        await module.InvokeVoidAsync("updatePopper", id, contentRef, CreateOptions(placement, modifiers), autoClose, _objRef);
+    }
+
+    public async Task Destroy(Guid id)
+    {
+        var module = await _moduleTask.Value;
+        await module.InvokeVoidAsync("destroyPopper", id);
+    }
+    
+    private object CreateOptions(Placement placement, Modifier[] modifiers)
     {
         return new
         {
             placement = placement.ToPopperString(),
-            modifiers = modifiers ?? Enumerable.Empty<Modifier>()
+            modifiers
         };
     }
 
