@@ -4,8 +4,6 @@ let popperMap = new Map();
 let handlerMap = new Map();
 
 const isChildOf = (parent, element) => {
-    console.log(parent, element);
-    
     if (element === undefined || element === null) {
         return false;
     }

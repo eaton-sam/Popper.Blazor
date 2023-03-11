@@ -589,12 +589,13 @@ video {
   margin-right: auto;
 }
 
-.mb-16 {
-  margin-bottom: 4rem;
+.my-24 {
+  margin-top: 6rem;
+  margin-bottom: 6rem;
 }
 
-.mb-24 {
-  margin-bottom: 6rem;
+.mb-16 {
+  margin-bottom: 4rem;
 }
 
 .mb-4 {
@@ -660,6 +661,14 @@ video {
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
 }
 
 .justify-between {
@@ -761,10 +770,6 @@ video {
 
 .p-6 {
   padding: 1.5rem;
-}
-
-.p-8 {
-  padding: 2rem;
 }
 
 .px-4 {
