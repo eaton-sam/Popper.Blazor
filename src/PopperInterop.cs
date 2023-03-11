@@ -3,13 +3,13 @@ using Microsoft.JSInterop;
 
 namespace Popper.Blazor;
 
-public class PopperInterop : IAsyncDisposable
+internal class PopperInterop : IAsyncDisposable
 {
     private readonly Lazy<Task<IJSObjectReference>> _moduleTask;
     private readonly DotNetObjectReference<PopperInterop>? _objRef;
 
     public delegate Task Closed();
-    public event Closed OnClosed;
+    public event Closed? OnClosed;
     
     public PopperInterop(IJSRuntime jsRuntime)
     {

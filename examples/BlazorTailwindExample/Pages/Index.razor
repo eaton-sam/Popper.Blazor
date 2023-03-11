@@ -19,14 +19,19 @@ Welcome to your new app.
 </div>
 
 <div class="my-24 flex justify-center items-center">
-    <Popper Open Placement="@_placement" Offset="(10, 10)">
+    <Popper Open Placement="@_placement" Offset="@((_offsetX, _offsetY))">
         <Anchor>
-            <select class="border border-gray-300 p-4 rounded" @bind="_placement">
-                @foreach (var placement in Enum.GetValues<Placement>())
-                {
-                    <option value="@placement">@placement.ToString()</option>
-                }
-            </select>
+            <div class="flex gap-2 p-8">
+                <select class="border border-gray-300 p-4 rounded" @bind="_placement">
+                    @foreach (var placement in Enum.GetValues<Placement>())
+                    {
+                        <option value="@placement">@placement.ToString()</option>
+                    }
+                </select>
+                <input type="number" @bind="_offsetX" />
+                <input type="number" @bind="_offsetY" />
+            </div>
+
         </Anchor>
         <Content>
             <div class="border border-gray-700 bg-gray-900 text-white p-4 rounded">
@@ -40,5 +45,7 @@ Welcome to your new app.
     private bool _isOpen;
 
     private Placement _placement = Placement.Bottom;
+    private int _offsetX;
+    private int _offsetY;
 }
 

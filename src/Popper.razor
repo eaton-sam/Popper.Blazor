@@ -32,8 +32,8 @@
     
     private Guid _instanceId = Guid.NewGuid();
 
-    private Placement? _previousPlacement;
     private bool? _wasOpen;
+    private PopperParameters? _previousParameters;
     
     private ElementReference _anchorRef;
     private ElementReference _contentRef;
@@ -51,11 +51,14 @@
         //TODO: work out why this is necessary
         await Task.Yield();
 
+        var hasRendered = false;
+        
         if (Open && (!_wasOpen.HasValue || !_wasOpen.Value))
         {
             //Wasn't open, now is
             Console.WriteLine("Wasn't open, now is");
             await _popperInterop.Create(_instanceId, _anchorRef, _contentRef, Placement, GetModifiers(), AutoClose);
+            hasRendered = true;
         }
         if (!Open && _wasOpen.HasValue && _wasOpen.Value)
         {
@@ -65,24 +68,35 @@
         }
         
         //Properties have changed, need to update popper instance
-        //Has to be open, has to have been rendered at least once before
-        if (Open && OptionsHaveChanged())
+        if (!hasRendered && Open && OptionsHaveChanged())
         {
             await _popperInterop.Update(_instanceId, _contentRef, Placement, GetModifiers(), Open && AutoClose);
         }
 
         _wasOpen = Open;
-        _previousPlacement = Placement;
+        _previousParameters = new PopperParameters()
+        {
+            AutoClose = AutoClose,
+            Modifiers = Modifiers,
+            Offset = Offset,
+            Placement = Placement
+        };
     }
 
     private bool OptionsHaveChanged()
     {
-        if (_previousPlacement.HasValue && Placement != _previousPlacement.Value)
+        if (_previousParameters is not null)
         {
-            return true;
+            var newParameters = new PopperParameters()
+            {
+                AutoClose = AutoClose,
+                Modifiers = Modifiers,
+                Offset = Offset,
+                Placement = Placement
+            };
+            return !newParameters.Equals(_previousParameters);
         }
-
-
+        
         return false;
     }
 
