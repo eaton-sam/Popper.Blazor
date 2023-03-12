@@ -22,7 +22,7 @@
     [Parameter] public RenderFragment? Anchor { get; set; }
     [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
     [Parameter] public bool AutoClose { get; set; }
-    [Parameter] public (int x, int y)? Offset { get; set; }
+    [Parameter] public (int skid, int distance)? Offset { get; set; }
     [Parameter] public Modifier[] Modifiers { get; set; } = { };
 
     [Parameter] public bool Open { get; set; }
@@ -105,7 +105,7 @@
         var modifiers = new List<Modifier>(Modifiers);
         if (Offset.HasValue)
         {
-            modifiers.Add(new OffsetModifier(Offset.Value.x, Offset.Value.y));
+            modifiers.Add(new OffsetModifier(Offset.Value.skid, Offset.Value.distance));
         }
         return modifiers.ToArray();
     }
