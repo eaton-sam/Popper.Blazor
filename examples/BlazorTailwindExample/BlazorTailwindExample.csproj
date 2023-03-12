@@ -12,6 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Popper.Blazor.DependencyInjection.Wasm\Popper.Blazor.DependencyInjection.Wasm.csproj" />
       <ProjectReference Include="..\..\src\Popper.Blazor.csproj" />
     </ItemGroup>
 
