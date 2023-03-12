@@ -4,8 +4,6 @@ public abstract class Modifier
 {
     public abstract string Name { get; }
     public abstract Dictionary<string, object> Options { get; }
-    
-    // public static Modifier[] Collect(params Modifier[] modifiers) => modifiers;
 }
 
 public sealed class OffsetModifier : Modifier, IEquatable<OffsetModifier>

@@ -1,9 +1,7 @@
 ﻿@layout MainLayout
 @page "/"
 
-<h1 class="text-4xl font-bold mb-4 mt-[111px]">Hello, world!</h1>
-
-Welcome to your new app.
+<h1 class="text-4xl font-bold mb-4 mt-[111px]">Popper.Blazor</h1>
 
 <div class="mt-4 mb-16">
     <Popper @bind-Open="_isOpen" Placement="Placement.Bottom" Offset="(5, 5)" AutoClose>
@@ -19,7 +17,7 @@ Welcome to your new app.
 </div>
 
 <div class="my-16">
-    <Popper @bind-Open="_hoverIsOpen" Placement="Placement.Bottom" Offset="(5, 5)" AutoClose>
+    <Popper @bind-Open="_hoverIsOpen" Placement="Placement.Bottom" Offset="(5, 5)">
         <Anchor>
             <button class="bg-cyan-800 text-white rounded px-4 py-2" @onmouseenter="() => _hoverIsOpen = true" @onmouseleave="() => _hoverIsOpen = false">
                 Hover Popper

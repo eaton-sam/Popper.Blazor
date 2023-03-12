@@ -35,7 +35,7 @@ const addOffClick = (id, content, dotnetRef) => {
 
 export function createPopper(id, anchor, content, settings, autoClose, dotnetRef) {
     if(popperMap.has(id)) {
-        throw "This shouldn't happen in create";
+        throw "CreatePopper was called when a popper already exists";
     }
     
     popperMap.set(id, Popper.createPopper(anchor, content, settings));
@@ -47,7 +47,7 @@ export function createPopper(id, anchor, content, settings, autoClose, dotnetRef
 
 export function updatePopper(id, content, settings, autoClose, dotnetRef) {
     if(!popperMap.has(id)) {
-        throw "This shouldn't happen in update";
+        throw "UpdatePopper was called but the popper doesn't exist";
     }
     
     let popper = popperMap.get(id);

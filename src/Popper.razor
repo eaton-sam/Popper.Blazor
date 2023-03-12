@@ -22,14 +22,13 @@
     [Parameter] public RenderFragment? Anchor { get; set; }
     [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
     [Parameter] public bool AutoClose { get; set; }
+    [Parameter] public Placement Placement { get; set; }
     [Parameter] public (int skid, int distance)? Offset { get; set; }
     [Parameter] public Modifier[] Modifiers { get; set; } = { };
 
     [Parameter] public bool Open { get; set; }
     [Parameter] public EventCallback<bool> OpenChanged { get; set; }
 
-    [Parameter] public Placement Placement { get; set; }
-    
     private Guid _instanceId = Guid.NewGuid();
 
     private bool? _wasOpen;
@@ -38,7 +37,7 @@
     private ElementReference _anchorRef;
     private ElementReference _contentRef;
 
-    private PopperInterop _popperInterop;
+    private PopperInterop _popperInterop = default!;
 
     protected override void OnInitialized()
     {
@@ -48,22 +47,23 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        //TODO: work out why this is necessary
-        await Task.Yield();
+        // without this _contentRef isn't initialised properly on first render
+        if (firstRender)
+        {
+            await Task.Yield();
+        }
 
         var hasRendered = false;
         
         if (Open && (!_wasOpen.HasValue || !_wasOpen.Value))
         {
             //Wasn't open, now is
-            Console.WriteLine("Wasn't open, now is");
             await _popperInterop.Create(_instanceId, _anchorRef, _contentRef, Placement, GetModifiers(), AutoClose);
             hasRendered = true;
         }
         if (!Open && _wasOpen.HasValue && _wasOpen.Value)
         {
             //Was open, now isn't
-            Console.WriteLine("Was open, now isn't");
             await _popperInterop.Destroy(_instanceId);
         }
         
@@ -85,19 +85,16 @@
 
     private bool OptionsHaveChanged()
     {
-        if (_previousParameters is not null)
-        {
-            var newParameters = new PopperParameters()
-            {
-                AutoClose = AutoClose,
-                Modifiers = Modifiers,
-                Offset = Offset,
-                Placement = Placement
-            };
-            return !newParameters.Equals(_previousParameters);
-        }
+        if (_previousParameters is null) return false;
         
-        return false;
+        var newParameters = new PopperParameters()
+        {
+            AutoClose = AutoClose,
+            Modifiers = Modifiers,
+            Offset = Offset,
+            Placement = Placement
+        };
+        return !newParameters.Equals(_previousParameters);
     }
 
     private Modifier[] GetModifiers()
@@ -119,6 +116,7 @@
 
     public async ValueTask DisposeAsync()
     {
+        _popperInterop.OnClosed -= HidePopper;
         await _popperInterop.Destroy(_instanceId);
         await _popperInterop.DisposeAsync();
     }

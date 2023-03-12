@@ -2,18 +2,15 @@ namespace Popper.Blazor;
 
 internal class PopperParameters : IEquatable<PopperParameters>
 {
-    public bool AutoClose { get; set; }
-    public (int x, int y)? Offset { get; set; }
-    public Placement Placement { get; set; }
-    public Modifier[] Modifiers { get; set; } = { };
-
+    public bool AutoClose { get; init; }
+    public (int x, int y)? Offset { get; init; }
+    public Placement Placement { get; init; }
+    public Modifier[] Modifiers { get; init; } = Array.Empty<Modifier>();
 
     public bool Equals(PopperParameters? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        
-        Console.WriteLine($"{Placement} - {other.Placement}");
         
         return AutoClose == other.AutoClose && Nullable.Equals(Offset, other.Offset) && Placement == other.Placement && Modifiers.SequenceEqual(other.Modifiers);
     }

@@ -48,7 +48,6 @@ internal class PopperInterop : IAsyncDisposable
     [JSInvokable]
     public void HidePopper()
     {
-        Console.WriteLine("HidePopper hit");
         OnClosed?.Invoke();
     }
 
