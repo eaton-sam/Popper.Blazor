@@ -1,0 +1,124 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+@implements IAsyncDisposable
+
+@if (Anchor is not null)
+{
+    <span style="display: inline-block" @ref="_anchorRef">
+        @Anchor
+    </span>
+}
+
+@if (Open)
+{
+    <PopperPortal>
+        <span @ref="_contentRef">
+            @Content
+        </span>
+    </PopperPortal>
+}
+
+@code {
+    [Parameter] public RenderFragment? Anchor { get; set; }
+    [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
+    [Parameter] public bool AutoClose { get; set; }
+    [Parameter] public Placement Placement { get; set; }
+    [Parameter] public (int skid, int distance)? Offset { get; set; }
+    [Parameter] public Modifier[] Modifiers { get; set; } = { };
+
+    [Parameter] public bool Open { get; set; }
+    [Parameter] public EventCallback<bool> OpenChanged { get; set; }
+
+    private Guid _instanceId = Guid.NewGuid();
+
+    private bool? _wasOpen;
+    private PopperParameters? _previousParameters;
+    
+    private ElementReference _anchorRef;
+    private ElementReference _contentRef;
+
+    private PopperInterop _popperInterop = default!;
+
+    protected override void OnInitialized()
+    {
+        _popperInterop = new PopperInterop(JSRuntime);
+        _popperInterop.OnClosed += HidePopper;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // without this _contentRef isn't initialised properly on first render
+        if (firstRender)
+        {
+            await Task.Yield();
+        }
+
+        var hasRendered = false;
+        
+        if (Open && (!_wasOpen.HasValue || !_wasOpen.Value))
+        {
+            //Wasn't open, now is
+            await _popperInterop.Create(_instanceId, _anchorRef, _contentRef, Placement, GetModifiers(), AutoClose);
+            hasRendered = true;
+        }
+        if (!Open && _wasOpen.HasValue && _wasOpen.Value)
+        {
+            //Was open, now isn't
+            await _popperInterop.Destroy(_instanceId);
+        }
+        
+        //Properties have changed, need to update popper instance
+        if (!hasRendered && Open && OptionsHaveChanged())
+        {
+            await _popperInterop.Update(_instanceId, _contentRef, Placement, GetModifiers(), AutoClose);
+        }
+
+        _wasOpen = Open;
+        _previousParameters = new PopperParameters()
+        {
+            AutoClose = AutoClose,
+            Modifiers = Modifiers,
+            Offset = Offset,
+            Placement = Placement
+        };
+    }
+
+    private bool OptionsHaveChanged()
+    {
+        if (_previousParameters is null) return false;
+        
+        var newParameters = new PopperParameters()
+        {
+            AutoClose = AutoClose,
+            Modifiers = Modifiers,
+            Offset = Offset,
+            Placement = Placement
+        };
+        return !newParameters.Equals(_previousParameters);
+    }
+
+    private Modifier[] GetModifiers()
+    {
+        var modifiers = new List<Modifier>(Modifiers);
+        if (Offset.HasValue)
+        {
+            modifiers.Add(new OffsetModifier(Offset.Value.skid, Offset.Value.distance));
+        }
+        return modifiers.ToArray();
+    }
+
+    private async Task HidePopper()
+    {
+        Open = false;
+        await OpenChanged.InvokeAsync(Open);
+        StateHasChanged();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _popperInterop.OnClosed -= HidePopper;
+        await _popperInterop.Destroy(_instanceId);
+        await _popperInterop.DisposeAsync();
+    }
+
+}

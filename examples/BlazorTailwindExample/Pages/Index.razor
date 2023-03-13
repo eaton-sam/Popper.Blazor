@@ -1,0 +1,77 @@
+﻿@layout MainLayout
+@page "/"
+
+<div class="mt-8 mb-24 flex justify-center items-center">
+    <Popper Open Placement="@_placement" Offset="@((_offsetSkid, _offsetDistance))">
+        <Anchor>
+            <div class="flex gap-2 p-8 shadow">
+                <label class="flex flex-col justify-between">
+                    <span>Placement</span>
+                    <select class="border border-gray-300 p-2 rounded" @bind="_placement">
+                        @foreach (var placement in Enum.GetValues<Placement>())
+                        {
+                            <option value="@placement">@placement.ToString()</option>
+                        }
+                    </select>
+                </label>
+                <label class="flex flex-col">
+                    <span>Offset skid</span>
+                    <input class="border border-gray-300 p-2 rounded" type="number" @bind="_offsetSkid"/>
+                </label>
+                <label class="flex flex-col">
+                    <span>Offset distance</span>
+                    <input class="border border-gray-300 p-2 rounded" type="number" @bind="_offsetDistance"/>
+                </label>
+            </div>
+        </Anchor>
+        <Content>
+            <div class="border border-gray-700 bg-gray-900 text-white p-4 rounded">
+                Here's some popover content
+            </div>
+        </Content>
+    </Popper>
+</div>
+
+
+<div class="mt-8">
+    <h2 class="text-lg font-bold">Autoclose</h2>
+    <p>Poppers can be set to close when a user clicks away</p>
+    
+    <Popper @bind-Open="_isOpen" Placement="Placement.Right" Offset="(0, 5)" AutoClose>
+        <Anchor>
+            <button class="bg-orange-600 text-white rounded px-4 py-2 mt-4" @onclick="() => _isOpen = !_isOpen">Autoclosing Popper</button>
+        </Anchor>
+        <Content>
+            <div class="border border-gray-300 bg-white p-4 rounded">
+                Here's some popover content
+            </div>
+        </Content>
+    </Popper>
+</div>
+
+<div class="mt-8">
+    <h2 class="text-lg font-bold">Hover</h2>
+    
+    <Popper @bind-Open="_hoverIsOpen" Placement="Placement.RightEnd" Offset="(0, 5)">
+        <Anchor>
+            <button class="bg-purple-700 text-white rounded px-4 py-2 mt-4" @onmouseenter="() => _hoverIsOpen = true" @onmouseleave="() => _hoverIsOpen = false">
+                Hover Popper
+            </button>
+        </Anchor>
+        <Content>
+            <div class="border border-gray-300 bg-white p-4 rounded">
+                Here's some popover content
+            </div>
+        </Content>
+    </Popper>
+</div>
+
+@code {
+    private bool _isOpen;
+    private bool _hoverIsOpen;
+
+    private Placement _placement = Placement.Bottom;
+    private int _offsetSkid;
+    private int _offsetDistance;
+}
+
