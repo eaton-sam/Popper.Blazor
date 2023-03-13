@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
 namespace Popper.Blazor.DependencyInjection.Wasm;
 
-public static class RootComponentMappingCollectionExtensions
+public static class WebAssemblyHostBuilderExtensions
 {
     public static void AddPoppers(this WebAssemblyHostBuilder hostBuilder)
     {

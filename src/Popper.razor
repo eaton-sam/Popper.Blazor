@@ -70,7 +70,7 @@
         //Properties have changed, need to update popper instance
         if (!hasRendered && Open && OptionsHaveChanged())
         {
-            await _popperInterop.Update(_instanceId, _contentRef, Placement, GetModifiers(), Open && AutoClose);
+            await _popperInterop.Update(_instanceId, _contentRef, Placement, GetModifiers(), AutoClose);
         }
 
         _wasOpen = Open;
