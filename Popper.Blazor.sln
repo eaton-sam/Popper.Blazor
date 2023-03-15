@@ -3,21 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popper.Blazor", "src\Popper.Blazor.csproj", "{BD8289D8-BD0E-464F-BC1C-D84724C53F85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popper.Blazor", "src\Popper.Blazor\Popper.Blazor.csproj", "{BD8289D8-BD0E-464F-BC1C-D84724C53F85}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{9E382CD4-EA8B-4741-8CE6-E198FEA48247}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTailwindExample", "examples\BlazorTailwindExample\BlazorTailwindExample.csproj", "{06CF8254-567A-4854-8B2E-0E9D7A294C88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorTailwindExample", "examples\BlazorTailwindExample\BlazorTailwindExample.csproj", "{06CF8254-567A-4854-8B2E-0E9D7A294C88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Popper.Blazor.DependencyInjection.Wasm", "Popper.Blazor.DependencyInjection.Wasm\Popper.Blazor.DependencyInjection.Wasm.csproj", "{51494F3C-DE7D-467C-8FF7-C4FADC76C6A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Popper.Blazor.DependencyInjection.Wasm", "src\Popper.Blazor.DependencyInjection.Wasm\Popper.Blazor.DependencyInjection.Wasm.csproj", "{51494F3C-DE7D-467C-8FF7-C4FADC76C6A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BD8289D8-BD0E-464F-BC1C-D84724C53F85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -32,6 +29,9 @@ Global
 		{51494F3C-DE7D-467C-8FF7-C4FADC76C6A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51494F3C-DE7D-467C-8FF7-C4FADC76C6A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51494F3C-DE7D-467C-8FF7-C4FADC76C6A1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{06CF8254-567A-4854-8B2E-0E9D7A294C88} = {9E382CD4-EA8B-4741-8CE6-E198FEA48247}

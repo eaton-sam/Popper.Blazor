@@ -5,3 +5,17 @@
 .tableheader {
     @apply p-2 border-b-4 border-purple-600 text-left uppercase text-sm tracking-wider;
 }
+
+.fade-in {
+    animation: fadein ease-in 0.2s;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}

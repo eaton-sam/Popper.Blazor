@@ -2,7 +2,7 @@
 @page "/"
 
 <div class="mt-8 mb-24 flex justify-center items-center">
-    <Popper Open Placement="@_placement" Offset="@((_offsetSkid, _offsetDistance))">
+    <Popper Open="true" Placement="@_placement" Offset="@((_offsetSkid, _offsetDistance))">
         <Anchor>
             <div class="flex gap-2 p-8 shadow">
                 <label class="flex flex-col justify-between">
@@ -25,7 +25,7 @@
             </div>
         </Anchor>
         <Content>
-            <div class="border border-gray-700 bg-gray-900 text-white p-4 rounded">
+            <div class="bg-gray-900 text-white p-4 rounded fade-in">
                 Here's some popover content
             </div>
         </Content>
@@ -42,7 +42,7 @@
             <button class="bg-orange-600 text-white rounded px-4 py-2 mt-4" @onclick="() => _isOpen = !_isOpen">Autoclosing Popper</button>
         </Anchor>
         <Content>
-            <div class="border border-gray-300 bg-white p-4 rounded">
+            <div class="border border-gray-300 bg-white p-4 rounded fade-in">
                 Here's some popover content
             </div>
         </Content>

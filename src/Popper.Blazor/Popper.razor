@@ -2,12 +2,10 @@
 @inject IJSRuntime JSRuntime
 @implements IAsyncDisposable
 
-@if (Anchor is not null)
-{
-    <span style="display: inline-block" @ref="_anchorRef">
-        @Anchor
-    </span>
-}
+
+<span style="display: inline-block" @ref="_anchorRef">
+    @Anchor
+</span>
 
 @if (Open)
 {
@@ -19,8 +17,9 @@
 }
 
 @code {
-    [Parameter] public RenderFragment? Anchor { get; set; }
+    [Parameter, EditorRequired] public RenderFragment Anchor { get; set; } = default!;
     [Parameter, EditorRequired] public RenderFragment Content { get; set; } = default!;
+
     [Parameter] public bool AutoClose { get; set; }
     [Parameter] public Placement Placement { get; set; }
     [Parameter] public (int skid, int distance)? Offset { get; set; }
@@ -33,7 +32,7 @@
 
     private bool? _wasOpen;
     private PopperParameters? _previousParameters;
-    
+
     private ElementReference _anchorRef;
     private ElementReference _contentRef;
 
@@ -48,13 +47,13 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         // without this _contentRef isn't initialised properly on first render
-        if (firstRender)
+        if (firstRender && Open)
         {
             await Task.Yield();
         }
 
         var hasRendered = false;
-        
+
         if (Open && (!_wasOpen.HasValue || !_wasOpen.Value))
         {
             //Wasn't open, now is

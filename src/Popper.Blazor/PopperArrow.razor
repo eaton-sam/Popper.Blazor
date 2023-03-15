@@ -1,0 +1,29 @@
+﻿<div style="@GetPlacementStyles()" data-popper-arrow>
+    <div style="width: 10px; height: 10px; margin-top: -10px">
+        <svg viewBox="0 0 100 100" class="fill-gray-900">
+            <polygon points="0,0 100,0 50,75" />
+        </svg>
+    </div>
+</div>
+
+@code {
+    [CascadingParameter] Placement Placement { get; set; }
+
+    private string GetArrowStyles() => Placement switch
+    {
+        Placement.Bottom or Placement.BottomStart or Placement.BottomEnd => "top: 0; z-index: -1;",
+        Placement.Top or Placement.TopStart or Placement.TopEnd => "bottom: 0; z-index: -1;",
+        Placement.Left or Placement.LeftStart or Placement.LeftEnd => "right: 0; z-index: -1;",
+        Placement.Right or Placement.RightStart or Placement.RightEnd => "left: 0; z-index: -1;",
+        _ => throw new InvalidOperationException("Placement value invalid")
+    };
+
+    private string GetPlacementStyles() => Placement switch
+    {
+        Placement.Bottom or Placement.BottomStart or Placement.BottomEnd => "top: 0; z-index: -1;",
+        Placement.Top or Placement.TopStart or Placement.TopEnd => "bottom: 0; z-index: -1;",
+        Placement.Left or Placement.LeftStart or Placement.LeftEnd => "right: 0; z-index: -1;",
+        Placement.Right or Placement.RightStart or Placement.RightEnd => "left: 0; z-index: -1;",
+        _ => throw new InvalidOperationException("Placement value invalid")
+    };
+}
