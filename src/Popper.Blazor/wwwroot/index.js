@@ -38,7 +38,6 @@ export function createPopper(id, anchor, content, settings, autoClose, dotnetRef
         throw "CreatePopper was called when a popper already exists";
     }
 
-    console.log("Creating popper with: ", anchor, content);
     popperMap.set(id, Popper.createPopper(anchor, content, settings));
 
     if (autoClose) {
